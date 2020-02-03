@@ -32,16 +32,16 @@ import * as path from "path";
 
     //! END @TODO1
 
-    app.get("/filteredimage", async (req: Request, res: Response) => {
+    app.get("/filteredimage", async (req, res) => {
         const imageUrl: string = req.query.image_url;
-        if(!imageUrl){
-            res.status(400).send({status: "failed", message:"image_url is required"})
+        if (!imageUrl) {
+            res.status(400).send({status: "failed", message: "image_url is required"})
         }
         try{
             const image = path.normalize(await filterImageFromURL(imageUrl));
-            res.status(200).sendFile(image,(error: Error) =>{
-                if(error){
-                    res.status(500).send({status:"failed", message: "something went wrong", verbose: error})
+            res.status(200).sendFile(image,( error: Error) => {
+                if (error) {
+                    res.status(422).send({status: "failed", message: "something went wrong", verbose: error});
                 }
                 deleteLocalFiles([image]);
             });
